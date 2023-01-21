@@ -63,12 +63,7 @@ public class Task2 {
         }
         System.out.printf("В тексте %d слов\n", wordMap.size());
 
-        Map<Integer, Set<String>> wordSortedMap = new TreeMap<>(new Comparator<Integer>() {
-            @Override
-            public int compare(Integer o1, Integer o2) {
-                return o2.compareTo(o1);
-            }
-        });
+        Map<Integer, Set<String>> wordSortedMap = new TreeMap<>(Comparator.reverseOrder());
 
         for (Map.Entry<String, Integer> wordCounts : wordMap.entrySet()) {
             String word = wordCounts.getKey();
