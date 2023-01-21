@@ -22,14 +22,28 @@ public class Task2 {
     // 1 — quick
 
     public static void main(String[] args) {
-        String testString1 = "yourapp the quick     brown fox jumps    over         \t the lazy dog ";
-        String testString2 = "yourapp the quick brown fox cat dog jumps over the lazy dog cat cat the beaver";
-        String testString3 = "yourapp the quick brown fox cat dog jumps over the lazy dog cat cat the beaver lion the cat cat lion tiger tiger1 tiger2";
-        analyzeText(testString1);
-        System.out.println("--------------");
-        analyzeText(testString2);
-        System.out.println("--------------");
-        analyzeText(testString3);
+//        String testString1 = "yourapp the quick     brown fox jumps    over         \t the lazy dog ";
+//        String testString2 = "yourapp the quick brown fox cat dog jumps over the lazy dog cat cat the beaver";
+//        String testString3 = "yourapp the quick brown fox cat dog jumps over the lazy dog cat cat the beaver lion the cat cat lion tiger tiger1 tiger2";
+//        analyzeText(testString1);
+//        System.out.println("--------------");
+//        analyzeText(testString2);
+//        System.out.println("--------------");
+//        analyzeText(testString3);
+//        Test strings passed
+
+        Scanner scanner = new Scanner(System.in);
+        String input;
+        while (true) {
+            System.out.println("Введите текстовую строку для анализа (exit - для выхода):");
+            input = scanner.nextLine();
+            if ("exit".equals(input)) {
+                break;
+            } else {
+                analyzeText(input);
+            }
+        }
+        scanner.close();
     }
 
     public static void analyzeText(String text) {
@@ -76,8 +90,11 @@ public class Task2 {
             Set<String> wordSet = entry.getValue();
             for (String word : wordSet) {
                 System.out.printf("%d - %s\n", countOccurrenceWord, word);
+                i++;
+                if (i == 10) {
+                    break;
+                }
             }
-            i++;
             if (i == 10) {
                 break;
             }
