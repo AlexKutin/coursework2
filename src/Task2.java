@@ -1,4 +1,7 @@
 import java.util.*;
+import java.util.function.Function;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class Task2 {
 
@@ -22,9 +25,10 @@ public class Task2 {
     // 1 — quick
 
     public static void main(String[] args) {
-//        String testString1 = "yourapp the quick     brown fox jumps    over         \t the lazy dog ";
+//        String testString1 = "yourapp the quick     brown fox jumps    over         \\t the lazy dog ";
 //        String testString2 = "yourapp the quick brown fox cat dog jumps over the lazy dog cat cat the beaver";
 //        String testString3 = "yourapp the quick brown fox cat dog jumps over the lazy dog cat cat the beaver lion the cat cat lion tiger tiger1 tiger2";
+//        String testString4 = "yourApp tHe quick brown fox Cat dog jumps over the lazy dog CAT cat the beaver LIon the cat cat lion tiger tiger1 tiger2";
 //        analyzeText(testString1);
 //        System.out.println("--------------");
 //        analyzeText(testString2);
@@ -49,51 +53,17 @@ public class Task2 {
     public static void analyzeText(String text) {
         String[] words = text.split(" ");
 
-        Map<String, Integer> wordMap = new HashMap<>();
-        for (String word : words) {
-            if (word.isBlank() || word.isEmpty()) {
-                continue;
-            }
-            if (wordMap.containsKey(word)) {
-                int countWord = wordMap.get(word);
-                wordMap.put(word, ++countWord);
-            } else {
-                wordMap.put(word, 1);
-            }
-        }
+        Map<String, Long> wordMap = Stream
+                .of(words)
+                .filter((s) -> !(s.isEmpty() || s.isBlank()))
+                .map(String::toLowerCase)
+                .collect(Collectors.groupingBy(Function.identity(), Collectors.counting()));
+
         System.out.printf("В тексте %d слов\n", wordMap.size());
-
-        Map<Integer, Set<String>> wordSortedMap = new TreeMap<>(Comparator.reverseOrder());
-
-        for (Map.Entry<String, Integer> wordCounts : wordMap.entrySet()) {
-            String word = wordCounts.getKey();
-            Integer countOccurrenceWord = wordCounts.getValue();
-
-            Set<String> wordSet;
-            if (wordSortedMap.containsKey(countOccurrenceWord)) {
-                wordSet = wordSortedMap.get(countOccurrenceWord);
-            } else {
-                wordSet = new TreeSet<>();
-            }
-            wordSet.add(word);
-            wordSortedMap.put(countOccurrenceWord, wordSet);
-        }
-
-        int i = 0;
-        for (Map.Entry<Integer, Set<String>> entry : wordSortedMap.entrySet()) {
-            Integer countOccurrenceWord = entry.getKey();
-            Set<String> wordSet = entry.getValue();
-            for (String word : wordSet) {
-                System.out.printf("%d - %s\n", countOccurrenceWord, word);
-                i++;
-                if (i == 10) {
-                    break;
-                }
-            }
-            if (i == 10) {
-                break;
-            }
-        }
+        wordMap.entrySet()
+               .stream()
+               .sorted(Comparator.comparing(Map.Entry<String, Long>::getValue).reversed()
+                       .thenComparing(Map.Entry::getKey))
+               .limit(10).forEach(e -> System.out.printf("%d - %s\n", e.getValue(), e.getKey()));
     }
-
 }
